@@ -1,0 +1,19 @@
+from typing import Protocol, List
+from abc import abstractmethod
+
+
+class RepositoryInterface(Protocol):
+    """Repository Interface"""
+
+    @abstractmethod
+    def get(self, uuid: str) -> "RepositoryInterface": ...
+
+    def add(self) -> "RepositoryInterface": ...
+
+    def delete(self) -> str: ...
+
+    def updated(self) -> "RepositoryInterface": ...
+
+    def filter(self) -> List["RepositoryInterface"]: ...
+
+    def list(self) -> List["RepositoryInterface"]: ...
