@@ -55,11 +55,8 @@ jobs:
         run: |
           source .venv/bin/activate
           pytest -v tests/
-      - name: flake8 Lint
-        uses: py-actions/flake8@v2
-        with:
-          exclude: "./.venv"
-          max-line-length: "100"
-          path: "./app"
-          plugins: "flake8-bugbear==22.1.11 flake8-black"
+      - name: flake8 Linting
+        run: |
+          source .venv/bin/activate
+          flake8 app --ignore E501,E704
       

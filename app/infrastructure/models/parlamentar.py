@@ -7,7 +7,6 @@ from sqlalchemy import String, Date
 from app import db
 
 if TYPE_CHECKING:
-    from .post import Post
     from .social_media import SocialMedia
 
 
@@ -19,5 +18,7 @@ class Parlamentar(db.Model):
     mandate: Mapped[str] = mapped_column(String)
     dob: Mapped[date | None] = mapped_column(Date, nullable=True)
     social_media: Mapped[List["SocialMedia"]] = relationship(
-        back_populates="parlamentar", cascade="all, delete", passive_deletes=True
+        back_populates="parlamentar",
+        cascade="all, delete",
+        passive_deletes=True,
     )
