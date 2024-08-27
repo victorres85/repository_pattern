@@ -1,0 +1,118 @@
+name: "CI: Main Workflow"
+run-name: ${{ github.actor }} CI Workflow
+
+env:
+  POSTGRES_USER: repo_user
+  POSTGRES_PASSWORD: repo_pass 
+  POSTGRES_DB: repo_db 
+
+on:
+  push:
+    branches: ["*"]
+jobs:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: repo_user
+          POSTGRES_PASSWORD: repo_pass
+          POSTGRES_DB: repo_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U repo_user"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        init: |
+          sleep 10
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      #----------------------------------------------
+      #  -----  install & configure poetry  -----
+      #----------------------------------------------
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          virtualenvs-path: .venv
+          installer-parallel: true
+
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      #----------------------------------------------
+      # install your root project, if required
+      #----------------------------------------------
+      - name: Install project
+        run: poetry install --no-interaction
+      #----------------------------------------------
+      #              run test suite
+      #----------------------------------------------
+      - name: Run tests
+        run: |
+          source .venv/bin/activate
+          pytest tests/
+          coverage report
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Installation
+        run: yarn install
+
+      - name: Run Preview Deployment
+        run: yarn deploy:preview
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          GITHUB_PR_NUMBER: ${{github.event.pull_request.number}}
+          GITHUB_REPO: 'NextJS-first-project'
+
+  test_e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: yarn
+
+      - name: Cyppress
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+
+      - name: Cyppress
+        uses: cypress-io/github-action@v6
+        with:
+          browser: firefox
+
+      - name: Cyppress
+        uses: cypress-io/github-action@v6
+        with:
+          browser: edge

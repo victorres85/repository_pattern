@@ -1,0 +1,15 @@
+{
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-python.black-formatter",
+    },
+    "python.testing.pytestArgs": ["tests"],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.cwd": "${workspaceFolder}",
+    "python.terminal.activateEnvironment": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "pylint.importStrategy": "fromEnvironment",
+    "pylint.interpreter": ["/Users/victoralmeida/Library/Caches/pypoetry/virtualenvs/repository-pattern-LLCh0UMj-py3.12/bin/python"],
+    "pylint.args": ["--rcfile=pyproject.toml"],
+}

@@ -10,7 +10,8 @@ if os.path.exists(dotenv_path):
 
 ENV = os.environ.get("ENV", "dev")
 SQLALCHEMY_DATABASE_URI = os.environ.get(
-    "SQLALCHEMY_DATABASE_URI", "postgresql+psycopg2://polimonitor_user:polimonitor_pass@localhost:5432/polimonitor_db"
+    "SQLALCHEMY_DATABASE_URI",
+    "postgresql+psycopg2://repo_user:repo_pass@localhost:5432/repo_db",
 )
 
 
@@ -26,7 +27,9 @@ class DevConfig(Config):
 
     ENV = "dev"
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://polimonitor_user:polimonitor_pass@localhost:5432/polimonitor_db"
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql+psycopg2://repo_user:repo_pass@localhost:5432/repo_db"
+    )
     SQLALCHEMY_ECHO = True
 
 

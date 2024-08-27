@@ -17,23 +17,32 @@ def test_client():
     """Set up a test client for the application."""
     config = TestConfig()
     app = create_app(config)
-    with app.test_client() as testing_client:
-        with app.app_context():
-            # Create the database and tables
-            db.create_all()
+
+    with app.app_context():
+        db.create_all()
+
+    # Add this part to ensure the test client runs in a request context
+    with app.test_request_context():
+        with app.test_client() as testing_client:
             yield testing_client
-        # Tear down the database
+
+    with app.app_context():
         db.drop_all()
 
 
 @pytest.fixture(scope="function")
 def session(test_client):
     """Set up a new database session for each test."""
-    connection = db.engine.connect()
-    transaction = connection.begin()
-    session = db._make_scoped_session(options={"bind": connection})
-    db.session = session
-    yield session
-    session.remove()
-    transaction.rollback()
-    connection.close()
+    with test_client.application.app_context():
+        connection = db.engine.connect()
+        transaction = connection.begin()
+
+        # Override the session with a new one bound to the transaction
+        session = db._make_scoped_session(options={"bind": connection})
+        db.session = session
+
+        yield session  # provide the fixture value
+
+        session.remove()
+        transaction.rollback()
+        connection.close()
