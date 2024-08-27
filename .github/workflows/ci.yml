@@ -19,7 +19,6 @@ jobs:
       - name: flake8 Lint
         uses: py-actions/flake8@v2
         with:
-          ignore: ""
           exclude: "./.venv"
           max-line-length: "100"
           path: "./app"
