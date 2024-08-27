@@ -6,16 +6,14 @@
 
 # Directories
 __pycache__/
-.vscode/
 
 # Ignore temporary files
 Dockerfile
 docker-compose.yml
 data/
 app/domain/
-app/rest/
 app/infrastructure/repository/interface.py
-tests/validaiton/
+tests/validation/
 tests/rest/
 
 #

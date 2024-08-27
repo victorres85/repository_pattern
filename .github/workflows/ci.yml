@@ -55,7 +55,6 @@ jobs:
         run: |
           source .venv/bin/activate
           pytest -v tests/
-            - name: Set up Python environment
       - name: flake8 Lint
         uses: py-actions/flake8@v2
         with:
