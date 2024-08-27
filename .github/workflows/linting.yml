@@ -24,5 +24,4 @@ jobs:
         with:
           options: "--check --verbose"
           src: "."
-          use_pyproject: true
         
