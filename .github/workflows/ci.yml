@@ -15,14 +15,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-
-      - name: flake8 Lint
-        uses: py-actions/flake8@v2
-        with:
-          exclude: "./.venv"
-          max-line-length: "100"
-          path: "./app"
-          plugins: "flake8-bugbear==22.1.11 flake8-black"
       - name: Set up PostgreSQL
         run: |
           docker run --name postgres_container \
@@ -64,4 +56,11 @@ jobs:
           source .venv/bin/activate
           pytest -v tests/
             - name: Set up Python environment
+      - name: flake8 Lint
+        uses: py-actions/flake8@v2
+        with:
+          exclude: "./.venv"
+          max-line-length: "100"
+          path: "./app"
+          plugins: "flake8-bugbear==22.1.11 flake8-black"
       
