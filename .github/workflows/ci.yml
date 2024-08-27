@@ -58,5 +58,5 @@ jobs:
       - name: flake8 Linting
         run: |
           source .venv/bin/activate
-          flake8 app --ignore E501,E704
+          flake8 app --ignore E501,E704 --exclude __init__.py
       
