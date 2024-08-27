@@ -15,15 +15,19 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Set up PostgreSQL
-        env:
-          POSTGRES_USER: repo_user
-          POSTGRES_PASSWORD: repo_pass
-          POSTGRES_DB: repo_db
+        - name: Set up PostgreSQL
         run: |
-          docker run --name postgres_container -e POSTGRES_USER=$POSTGRES_USER -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -e POSTGRES_DB=$POSTGRES_DB -p 5432:5432 -d postgres:14
-      - name: Run Docker container
-        uses: docker://postgres:14
+          docker run --name postgres_container \
+            -e POSTGRES_USER=$POSTGRES_USER \
+            -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD \
+            -e POSTGRES_DB=$POSTGRES_DB \
+            -p 5432:5432 \
+            -d postgres:14
+            
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          docker exec postgres_container sh -c 'until pg_isready -U $POSTGRES_USER; do sleep 1; done'
+      
       - name: Set up python
         id: setup-python
         uses: actions/setup-python@v5
