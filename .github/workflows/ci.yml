@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        - name: Set up PostgreSQL
+      - name: Set up PostgreSQL
         run: |
           docker run --name postgres_container \
             -e POSTGRES_USER=$POSTGRES_USER \
