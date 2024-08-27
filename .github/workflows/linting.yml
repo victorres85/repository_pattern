@@ -1,9 +1,8 @@
-name: Lint
-
+name: "Linting: Flake8 and Black"
+run-name: ${{ github.actor }} CI Workflow
 on:
-  push:
-    paths:
-      - '*.py'
+    push:
+      branches: ["*"]
 
 jobs:
   flake8_py3:
